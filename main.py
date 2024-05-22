@@ -8,7 +8,7 @@ if __name__ == '__main__':
     '''
     Este archivo es solo para inicializar la clase 'similarityCalculation'.
     Una vez inicializada, la función 'plagiarismDetection' se encarga del calculo.
-    A partir de un documento define si es plagio o no.
+    A partir de un documento, define si este es plagio o no.
 
     Si no es plagio regresa:
         Falso
