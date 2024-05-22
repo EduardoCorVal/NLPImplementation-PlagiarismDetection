@@ -67,3 +67,11 @@ else:
 ```
 
 Puedes ver un ejemplo del funcionamiento en el archivo `main.py`
+
+## Pruebas unitarias
+
+Para ejecutar las pruebas unitarias, ejecutar el archivo `test_similiarityCalculation.py`
+
+```shell
+python3 test_similiarityCalculation.py 
+``` 
