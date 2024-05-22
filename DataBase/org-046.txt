@@ -1,0 +1,8 @@
+Background:
+There is a dearth of feasibility assessments regarding using large language models (LLMs) for responding to inquiries from autistic patients within a Chinese-language context. Despite Chinese being one of the most widely spoken languages globally, the predominant research focus on applying these models in the medical field has been on English-speaking populations.
+
+Objective:
+This study aims to assess the effectiveness of LLM chatbots, specifically ChatGPT-4 (OpenAI) and ERNIE Bot (version 2.2.3; Baidu, Inc), one of the most advanced LLMs in China, in addressing inquiries from autistic individuals in a Chinese setting.
+
+Methods:
+For this study, we gathered data from DXY—a widely acknowledged, web-based, medical consultation platform in China with a user base of over 100 million individuals. A total of 100 patient consultation samples were rigorously selected from January 2018 to August 2023, amounting to 239 questions extracted from publicly available autism-related documents on the platform. To maintain objectivity, both the original questions and responses were anonymized and randomized. An evaluation team of 3 chief physicians assessed the responses across 4 dimensions: relevance, accuracy, usefulness, and empathy. The team completed 717 evaluations. The team initially identified the best response and then used a Likert scale with 5 response categories to gauge the responses, each representing a distinct level of quality. Finally, we compared the responses collected from different sources.
