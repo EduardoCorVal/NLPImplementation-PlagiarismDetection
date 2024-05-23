@@ -8,15 +8,8 @@ class TestSimilarityCalculation(unittest.TestCase):
     
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
-        self.files_path = self.temp_dir.name
+        self.files_path = "test_files/"
         self.percentaje_simil = 0.7
-        
-        # Crear archivos temporales para las pruebas
-        with open(os.path.join(self.files_path, 'file1.txt'), 'w', encoding='utf-8') as f:
-            f.write("This is a test file.")
-        
-        with open(os.path.join(self.files_path, 'file2.txt'), 'w', encoding='utf-8') as f:
-            f.write("This is another test file.")
         
         self.similarity_calculator = similarityCalculation(self.files_path, self.percentaje_simil)
     
@@ -35,14 +28,8 @@ class TestSimilarityCalculation(unittest.TestCase):
         lemmatized_text = self.similarity_calculator._lemmatize_text(text)
         self.assertEqual(lemmatized_text, expected_lemmatized_text)
     
-    @patch('similarityCalculation.similarityCalculation._uploadDatabase')
-    @patch('similarityCalculation.similarityCalculation._lemmatize_text')
-    @patch('similarityCalculation.similarityCalculation.similarityComparison')
-    def test_plagiarismDetection(self, mock_similarity_comparison, mock_lemmatize_text, mock_upload_database):
-        input_file_path = 'input_file.txt'
-        mock_lemmatize_text.return_value = "This is a lemmatized test sentence ."
-        mock_similarity_comparison.return_value = ('file1.txt', 0.8)
-        mock_upload_database.return_value = {'file1.txt': 'This is a test file.'}
+    def test_plagiarismDetection(self):
+        input_file_path = 'test_files/file1.txt'
         
         result = self.similarity_calculator.plagiarismDetection(input_file_path)
         
