@@ -55,7 +55,7 @@ class similarityCalculation:
         return is_plagiarism
 
 
-    def similarityComparison(self, lemmatized_input_text: str, files_and_content: dict):
+    def similarityComparison(self, lemmatized_input_text: str, files_and_content: dict) -> tuple:
         """
         Compara un texto lematizado con una base de datos de textos y encuentra el más similar.
 
@@ -74,7 +74,7 @@ class similarityCalculation:
 
         most_similar_index = similarities.argmax()
         most_similar_file = list(files_and_content.keys())[most_similar_index]
-        similarity_score = similarities[most_similar_index]
+        similarity_score = float(similarities[most_similar_index])
 
         logging.debug(f'Archivo más similar: {most_similar_file} con una similitud de {similarity_score}')
 
