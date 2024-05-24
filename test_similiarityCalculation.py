@@ -13,20 +13,20 @@ class TestSimilarityCalculation(unittest.TestCase):
         self.similarity_calculator = similarityCalculation(self.files_path, self.percentaje_simil)
         
     def test_dataBaseProcessing(self):
-        expected_files_and_content = {'file2.txt': 'This is another test file .', 
-                                      'file1.txt': 'This is a test file .'}
+        expected_files_and_content = {'file2.txt': 'another test file', 
+                                      'file1.txt': 'test file'}
         
         files_and_content_processed = self.similarity_calculator.dataBaseProcessing()
         
         self.assertDictEqual(files_and_content_processed, expected_files_and_content)
     
-    def test_lemmatize_text(self):
+    def test_preprocess_text(self):
         text = "This is a test sentence."
-        expected_lemmatized_text = "This is a test sentence ."
+        expected_preprocess_text = "test sentence"
         
-        lemmatized_text = self.similarity_calculator._lemmatize_text(text)
+        preprocess_text = self.similarity_calculator._preprocess_text(text)
         
-        self.assertEqual(lemmatized_text, expected_lemmatized_text)
+        self.assertEqual(preprocess_text, expected_preprocess_text)
     
     def test_plagiarismDetection_possitive(self):
         input_file_path = 'test_files/data_base/file1.txt'

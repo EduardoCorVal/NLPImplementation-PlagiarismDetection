@@ -38,6 +38,7 @@ pip3 -r install requirements.txt
 ```bash
 nltk.download('punkt')
 nltk.download('wordnet')
+nltk.download('stopwords')
 ```
 
 ## Uso

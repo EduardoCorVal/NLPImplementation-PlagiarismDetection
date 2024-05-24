@@ -18,7 +18,7 @@ if __name__ == '__main__':
         Archivo original de donde se realizó el pagio
         Porcentaje de similitud
     '''
-    file_to_analyse = 'test_input.txt'
+    file_to_analyse = 'input_file.txt'
     
     plagiarism = similarityCalculation(TXT_FILES_PATH, UMBRAL)
     
