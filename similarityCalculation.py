@@ -190,16 +190,4 @@ class similarityCalculation:
             logging.error(f'Error al leer el archivo: {e}')
             content = ''
         return content
-    
-    def _log_content(self, files_and_content: dict) -> None:
-        """
-        Registra el contenido de los archivos de texto en el log.
-        
-        Parámetros:
-        -----------
-        files_and_content : dict
-            Diccionario con los nombres de archivos y sus contenidos.
-        """
-        for nombre, content in files_and_content.items():
-            logging.info(f'Archivo: {nombre}\nContenido:\n{content}\n{"-"*40}')
 
