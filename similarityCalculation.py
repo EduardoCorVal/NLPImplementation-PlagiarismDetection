@@ -76,10 +76,6 @@ class similarityCalculation:
             return is_plagiarism, most_similar_file, similarity_score, is_tp
         
         return is_plagiarism
-
-
-        
-
     
     def similarityComparison(self, preprocessed_input_text: str, files_and_content: dict):
         """
@@ -210,9 +206,8 @@ class similarityCalculation:
         
         Retorna:
         --------
-        results : dict
-            Diccionario con el conteo de True Positive, True Negative, False Positive y False Negative.
-        auc : medida de desem
+        auc : float
+            Medida de desempeño basada en el conteo de True Positive, True Negative, False Positive y False Negative.
         """
         tp_count = 0
         tn_count = 0
