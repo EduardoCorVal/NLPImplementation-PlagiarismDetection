@@ -59,19 +59,27 @@ class similarityCalculation:
             Nombre del archivo más similar en caso de plagio.
         similarity_score : float
             Puntaje de similitud del archivo más similar.
+        is_tp : bool
+            True si 'TP' está en el nombre del archivo, False en caso contrario.
         """
-        is_plagiarism = False
         files_and_content_processed = self.dataBaseProcessing()
         input_text = self._read_file(input_file_path)
         preprocessed_input_text = self._preprocess_text(input_text)
         
         most_similar_file, similarity_score = self.similarityComparison(preprocessed_input_text, files_and_content_processed)
         
+        is_plagiarism = similarity_score >= self.percentaje_simil
+        is_tp = 'TP' in os.path.basename(input_file_path)
+
         if similarity_score >= self.percentaje_simil:
             is_plagiarism = True
-            return is_plagiarism, most_similar_file, similarity_score
+            return is_plagiarism, most_similar_file, similarity_score, is_tp
         
         return is_plagiarism
+
+
+        
+
     
     def similarityComparison(self, preprocessed_input_text: str, files_and_content: dict):
         """
@@ -190,4 +198,60 @@ class similarityCalculation:
             logging.error(f'Error al leer el archivo: {e}')
             content = ''
         return content
+    
+    def evaluate_directory(self, evaluation_dir: str):
+        """
+        Aplica la detección de plagio a todos los documentos en un directorio específico.
+        
+        Parámetros:
+        -----------
+        evaluation_dir : str
+            Ruta al directorio que contiene los archivos de texto a evaluar.
+        
+        Retorna:
+        --------
+        results : dict
+            Diccionario con el conteo de True Positive, True Negative, False Positive y False Negative.
+        auc : medida de desem
+        """
+        tp_count = 0
+        tn_count = 0
+        fp_count = 0
+        fn_count = 0
 
+        evaluation_files = glob.glob(os.path.join(evaluation_dir, '*.txt'))
+
+        for file in evaluation_files:
+            is_plagiarism = self.plagiarismDetection(file)
+            
+            is_tp = 'TP' in os.path.basename(file)
+
+            if is_tp:
+                if is_plagiarism:
+                    tp_count += 1
+                else:
+                    fn_count += 1
+            else:
+                if is_plagiarism:
+                    fp_count += 1
+                else:
+                    tn_count += 1
+
+            if is_plagiarism:
+                print(f'Procesando archivo: {os.path.basename(file)} - Plagio: {is_plagiarism[0]} - Archivo Original: {is_plagiarism[1]} - Porcentaje de Similitud: {is_plagiarism[2]} - True Positive: {is_tp}\n')
+            else:
+                print(f'Procesando archivo: {os.path.basename(file)} - Plagio: {is_plagiarism} - True Positive: {is_tp}\n')
+
+        results = {
+            'True Positive': tp_count,
+            'True Negative': tn_count,
+            'False Positive': fp_count,
+            'False Negative': fn_count
+        }
+
+        tpr = tp_count/(tp_count + fn_count)
+        fpr = fp_count/(fp_count + tn_count)
+
+        auc = (1 + tpr - fpr)/2
+
+        return auc

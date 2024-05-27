@@ -1,0 +1,9 @@
+En este trabajo se construyó un algoritmo computacional para la alineación de textos en la
+tarea de detección de plagio bilingüe. El método de detección de plagio bilingüe hace uso del
+servicio de traductores automáticos, con la finalidad de tener los documentos en cuestión en
+un idioma base, para después aplicar técnicas de plagio monolingüe. El algoritmo fue probado
+con el corpus perteneciente a la Competencia Internacional de Detección de Plagio del año
+2013, para evaluar la etapa de detección de plagio monolingüe. Además, se experimentó con
+la colección de textos EUROPARL, una colección de documentos pertenecientes a la reunión
+del parlamento europeo, de los que se tomaron los documentos en inglés y español, con la
+finalidad de probar la etapa bilingüe

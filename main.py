@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     Si no es plagio regresa:
         Falso
-
+cl
     Si es plagio regresa:
         True
         Archivo original de donde se realizó el pagio
@@ -22,5 +22,8 @@ if __name__ == '__main__':
     
     plagiarism = similarityCalculation(TXT_FILES_PATH, UMBRAL)
     
-    result = plagiarism.plagiarismDetection(file_to_analyse)
-    print(result)
+    #result = plagiarism.plagiarismDetection(file_to_analyse)
+    #Evaluar todos los archivos en el directorio 'Evaluation'
+    results = plagiarism.evaluate_directory('Evaluation')
+    print(results)
+
