@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, mock_open
+from unittest.mock import patch, mock_open, MagicMock
 from similarityCalculation import similarityCalculation
 
 class TestSimilarityCalculation(unittest.TestCase):
@@ -7,6 +7,8 @@ class TestSimilarityCalculation(unittest.TestCase):
     def setUp(self):
         self.data_base_files_path = "unit_test/mock_data_base"
         self.suspected_files_path = "unit_test/mock_suspected_files"
+        self.suspected_tp = "unit_test/mock_suspected_files/tp"
+        self.suspected_tn = "unit_test/mock_suspected_files/tn"
         self.percentaje_simil = 0.7
         self.similarity_calculator = similarityCalculation(self.data_base_files_path, self.percentaje_simil)
                 
@@ -34,7 +36,7 @@ class TestSimilarityCalculation(unittest.TestCase):
         self.assertEqual(preprocess_text, expected_preprocess_text)
     
     def test_plagiarismDetection_positive(self):
-        input_file_path = f'{self.suspected_files_path}/FID-02.txt'
+        input_file_path = f'{self.suspected_files_path}/TP-01.txt'
         
         result = self.similarity_calculator.plagiarismDetection(input_file_path)
 
@@ -45,7 +47,7 @@ class TestSimilarityCalculation(unittest.TestCase):
         self.assertGreaterEqual(result[2], self.percentaje_simil)
     
     def test_plagiarismDetection_negative(self):
-        input_file_path = f'{self.suspected_files_path}/FID-03.txt'
+        input_file_path = f'{self.suspected_files_path}/TN-01.txt'
         
         result = self.similarity_calculator.plagiarismDetection(input_file_path)
         
@@ -76,5 +78,25 @@ class TestSimilarityCalculation(unittest.TestCase):
         self.assertEqual(result_file, expected_similar_file)
         self.assertIs(type(result_score), float)
 
+
+    def test_evaluate_directory_all_tp(self):
+        auc = self.similarity_calculator.evaluate_directory(self.suspected_tp)
+        
+        # We expect the AUC to be 1 because all files are correctly classified.
+        self.assertEqual(auc, 1.0)
+
+    def test_evaluate_directory_all_tn(self):
+        auc = self.similarity_calculator.evaluate_directory(self.suspected_tn)
+        
+        # We expect the AUC to be 0.5 because all files are correctly classified.
+        self.assertEqual(auc, 0.5)
+
+    def test_evaluate_directory_mixed(self):
+        auc = self.similarity_calculator.evaluate_directory(self.suspected_files_path)
+        
+        # We expect the AUC to be 1 because all files are correctly classified.
+        self.assertEqual(auc, 1)
+    
+    
 if __name__ == '__main__':
     unittest.main()

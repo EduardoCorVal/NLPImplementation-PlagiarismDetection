@@ -2,7 +2,7 @@ from similarityCalculation import similarityCalculation
 
 # Definir el umbral de que es plagio o no
 TXT_FILES_PATH = 'DataBase'
-UMBRAL = 0.8
+UMBRAL = 0.75
 
 if __name__ == '__main__':
     '''
@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     Si no es plagio regresa:
         Falso
-cl
+
     Si es plagio regresa:
         True
         Archivo original de donde se realizó el pagio

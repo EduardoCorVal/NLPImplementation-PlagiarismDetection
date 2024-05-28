@@ -244,9 +244,18 @@ class similarityCalculation:
             'False Negative': fn_count
         }
 
-        tpr = tp_count/(tp_count + fn_count)
-        fpr = fp_count/(fp_count + tn_count)
-
+        if (tp_count + fn_count) == 0:
+            tpr = 0
+        else:
+            tpr = tp_count / (tp_count + fn_count)
+    
+        if (fp_count + tn_count) == 0:
+         fpr = 0
+        else:
+            fpr = fp_count / (fp_count + tn_count)
+    
         auc = (1 + tpr - fpr)/2
+
+        print (f'AUC: {auc}')
 
         return auc
