@@ -232,6 +232,8 @@ class similarityCalculation:
         tn_count = 0
         fp_count = 0
         fn_count = 0
+        result = []
+        result_negative = []
 
         evaluation_files = glob.glob(os.path.join(evaluation_dir, '*.txt'))
 
@@ -259,10 +261,26 @@ class similarityCalculation:
                 
             # Modificación reporte
             if is_plagiarism:
-                print(f'Procesando archivo: {os.path.basename(file)} - Plagio: {is_plagiarism[0]} - Archivo Original: {is_plagiarism[1]} - Porcentaje de plagio: {is_plagiarism[2]}')
+                result.append(f'Archivo sospechoso: {os.path.basename(file)} - Plagio: {is_plagiarism[0]} - Documento plagiado: {is_plagiarism[1]} - Porcentaje de similitud: {is_plagiarism[2]}')
             else:
-                # print(f'Procesando archivo: {os.path.basename(file)} - Plagio: {is_plagiarism} - True Positive: {is_tp}\n')
-                pass
+                result_negative.append(f'Procesando archivo: {os.path.basename(file)} - Plagio: {is_plagiarism}')
+            
+        type_plag = ['Parafraseo',
+                     'Parafraseo',
+                     'Cambio de tiempo',
+                     'Parafraseo',
+                     'Insertar o reemplazar frases',
+                     'Cambio de voz',
+                     'Insertar o reemplazar frases',
+                     'Parafraseo',
+                     'Cambio de voz']
+            
+        lista_tipos = [f"{a} {b}" for a, b in zip(result, type_plag)]
+        
+        lista_combinada = result + result_negative
+        
+        for element in lista_combinada:
+            print(f'{element}\n')
 
         results = {
             'True Positive': tp_count,
