@@ -7,6 +7,9 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from transformers import AutoTokenizer, AutoModel
+import torch
+
 
 class similarityCalculation:
     """
@@ -40,6 +43,8 @@ class similarityCalculation:
         self.files_path = txt_files_path
         self.percentaje_simil = percentaje_simil
         self.stop_words = set(stopwords.words('english'))
+        self.tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
+        self.model = AutoModel.from_pretrained("distilbert-base-uncased")
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s\n%(message)s')
         
     def plagiarismDetection(self, input_file_path: str):
@@ -95,19 +100,20 @@ class similarityCalculation:
         similarity_score : float
             Puntaje de similitud del archivo más similar.
         """
-        texts = [preprocessed_input_text] + list(files_and_content.values())
-        vectorizer = CountVectorizer().fit_transform(texts)
-        vectors = vectorizer.toarray()
-        cosine_matrix = cosine_similarity(vectors)
-        similarities = cosine_matrix[0][1:]  # Ignora la primera entrada que es el propio input_text
+        input_embedding = self._get_embedding(preprocessed_input_text)
+        max_similarity = 0
+        most_similar_file = None
 
-        most_similar_index = similarities.argmax()
-        most_similar_file = list(files_and_content.keys())[most_similar_index]
-        similarity_score = float(similarities[most_similar_index])
+        for file_name, content in files_and_content.items():
+            content_embedding = self._get_embedding(content)
+            similarity = self._cosine_similarity(input_embedding, content_embedding)
+            if similarity > max_similarity:
+                max_similarity = similarity
+                most_similar_file = file_name
 
-        logging.debug(f'Archivo más similar: {most_similar_file} con una similitud de {similarity_score}')
+        logging.debug(f'Archivo más similar: {most_similar_file} con una similitud de {max_similarity}')
         
-        return most_similar_file, similarity_score
+        return most_similar_file, max_similarity
     
     def dataBaseProcessing(self) -> dict:
         """
@@ -194,6 +200,19 @@ class similarityCalculation:
             logging.error(f'Error al leer el archivo: {e}')
             content = ''
         return content
+        
+    def _get_embedding(self, text: str) -> torch.Tensor:
+        inputs = self.tokenizer(text, return_tensors='pt', truncation=True, padding=True, max_length=512)
+        outputs = self.model(**inputs)
+        return outputs.last_hidden_state.mean(dim=1)  # Mean pooling
+
+    def _cosine_similarity(self, tensor1: torch.Tensor, tensor2: torch.Tensor) -> float:
+        return torch.nn.functional.cosine_similarity(tensor1, tensor2).item()
+    
+    def _log_content(self, files_and_content: dict) -> None:
+        for nombre, content in files_and_content.items():
+            logging.info(f'Archivo: {nombre}\nContenido:\n{content}\n{"-"*40}')
+
     
     def evaluate_directory(self, evaluation_dir: str):
         """
@@ -232,10 +251,18 @@ class similarityCalculation:
                 else:
                     tn_count += 1
 
+            # Previo
+            # if is_plagiarism:
+            #     print(f'Procesando archivo: {os.path.basename(file)} - Plagio: {is_plagiarism[0]} - Archivo Original: {is_plagiarism[1]} - Porcentaje de Similitud: {is_plagiarism[2]} - True Positive: {is_tp}\n')
+            # else:
+            #     print(f'Procesando archivo: {os.path.basename(file)} - Plagio: {is_plagiarism} - True Positive: {is_tp}\n')
+                
+            # Modificación reporte
             if is_plagiarism:
-                print(f'Procesando archivo: {os.path.basename(file)} - Plagio: {is_plagiarism[0]} - Archivo Original: {is_plagiarism[1]} - Porcentaje de Similitud: {is_plagiarism[2]} - True Positive: {is_tp}\n')
+                print(f'Procesando archivo: {os.path.basename(file)} - Plagio: {is_plagiarism[0]} - Archivo Original: {is_plagiarism[1]} - Porcentaje de plagio: {is_plagiarism[2]}')
             else:
-                print(f'Procesando archivo: {os.path.basename(file)} - Plagio: {is_plagiarism} - True Positive: {is_tp}\n')
+                # print(f'Procesando archivo: {os.path.basename(file)} - Plagio: {is_plagiarism} - True Positive: {is_tp}\n')
+                pass
 
         results = {
             'True Positive': tp_count,

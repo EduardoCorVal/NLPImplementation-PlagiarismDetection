@@ -2,7 +2,7 @@ from similarityCalculation import similarityCalculation
 
 # Definir el umbral de que es plagio o no
 TXT_FILES_PATH = 'DataBase'
-UMBRAL = 0.75
+UMBRAL = 0.95
 
 if __name__ == '__main__':
     '''
